@@ -5,89 +5,107 @@
 #include <cstdio>
 #include <vector>
 
-Employee::Employee(const std::string& fileName) : fileName(fileName) {
-    if (this->fileName.empty()) {
-        this->fileName = "Employees.txt";
+Employee::Employee(const std::string& strFileName) : strFileName(strFileName) {
+    if (this->strFileName.empty()) {
+        this->strFileName = "Employees.txt";
     }
 }
 
-bool Employee::getPassword(const std::string& username, std::string& password) const {
-    std::ifstream in(fileName);
-    if (!in) return false;
+bool Employee::getPassword(const std::string& strUsername, std::string& strPassword) const {
+    std::ifstream inFile(strFileName);
+    if (!inFile) {
+        return false;
+    }
 
-    std::string user, pass;
-    while (in >> user >> pass) {
-        if (user == username) {
-            password = pass;
+    std::string strUser, strPass;
+    while (inFile >> strUser >> strPass) {
+        if (strUser == strUsername) {
+            strPassword = strPass;
+            inFile.close();
             return true;
         }
     }
+    inFile.close();
     return false;
 }
 
-bool Employee::authenticate(const std::string& username, const std::string& password) const {
-    std::string storedPassword;
-    return getPassword(username, storedPassword) && storedPassword == password;
+bool Employee::authenticateEmployee(const std::string& strUsername, const std::string& strPassword) const {
+    std::string strStoredPassword;
+    return getPassword(strUsername, strStoredPassword) && strStoredPassword == strPassword;
 }
 
-bool Employee::needsFirstLoginPasswordChange(const std::string& username) const {
-    std::string storedPassword;
-    return getPassword(username, storedPassword) && storedPassword == "111111";
+bool Employee::needsFirstLoginPasswordChange(const std::string& strUsername) const {
+    std::string strStoredPassword;
+    return getPassword(strUsername, strStoredPassword) && strStoredPassword == "111111";
 }
 
-bool Employee::changePassword(const std::string& username,
-                                     const std::string& currentPassword,
-                                     const std::string& newPassword) {
-    if (newPassword.empty() || !authenticate(username, currentPassword)) return false;
+bool Employee::changePassword(const std::string& strUsername,
+                              const std::string& strCurrentPassword,
+                              const std::string& strNewPassword) {
+    if (strNewPassword.empty() || !authenticateEmployee(strUsername, strCurrentPassword)) {
+        return false;
+    }
 
-    std::string targetFile = fileName.empty() ? "Employees.txt" : fileName;
+    std::string strTargetFile = strFileName.empty() ? "Employees.txt" : strFileName;
 
-    std::ifstream in(targetFile);
-    if (!in) return false;
+    std::ifstream inFile(strTargetFile);
+    if (!inFile) {
+        return false;
+    }
 
-    std::vector<std::pair<std::string, std::string>> accounts;
-    std::string user, pass;
-    bool found = false;
-    while (in >> user >> pass) {
-        if (user == username) {
-            pass = newPassword;
-            found = true;
+    RecordList<std::pair<std::string, std::string>> employeeList;
+    std::string strUser, strPass;
+    bool bFound = false;
+
+    while (inFile >> strUser >> strPass) {
+        if (strUser == strUsername) {
+            strPass = strNewPassword;
+            bFound = true;
         }
-        accounts.push_back({user, pass});
+        employeeList.add({strUser, strPass});
     }
-    in.close();
-    if (!found) return false;
+    inFile.close();
 
-    const std::string tempFile = targetFile + ".tmp";
-    std::ofstream out(tempFile, std::ios::trunc);
-    if (!out) return false;
-
-    for (const auto& account : accounts) {
-        out << account.first << ' ' << account.second << '\n';
+    if (!bFound) {
+        return false;
     }
-    out.close();
 
-    std::remove(targetFile.c_str());
+    const std::string strTempFile = strTargetFile + ".tmp";
+    std::ofstream outFile(strTempFile, std::ios::trunc);
+    if (!outFile) {
+        return false;
+    }
 
-    if (std::rename(tempFile.c_str(), targetFile.c_str()) != 0) {
-        std::remove(tempFile.c_str());
+    // Lặp qua danh sách từ Template Collection để ghi ra file
+    for (const auto& employee : employeeList.getItems()) {
+        outFile << employee.first << ' ' << employee.second << '\n';
+    }
+    outFile.close();
+
+    std::remove(strTargetFile.c_str());
+
+    if (std::rename(strTempFile.c_str(), strTargetFile.c_str()) != 0) {
+        std::remove(strTempFile.c_str());
         return false;
     }
     return true;
 }
 
-bool Employee::displayProfile(const std::string& username) const {
-    std::ifstream in(username + ".txt");
-    if (!in) {
-        std::cout << "\033[31mKhong tim thay file thong tin: " << username << ".txt\033[0m\n";
+bool Employee::displayProfile(const std::string& strUsername) const {
+    std::ifstream inFile(strUsername + ".txt");
+    if (!inFile) {
+        std::cout << "\033[31mKhong tim thay file thong tin: " << strUsername << ".txt\033[0m\n";
         return false;
     }
 
-    const char* labels[] = {"Ho ten", "Dia chi", "So dien thoai", "Email"};
-    std::string value;
+    const char* szLabels[] = {"Ho ten", "Dia chi", "So dien thoai", "Email"};
+    std::string strValue;
     for (int i = 0; i < 4; ++i) {
-        if (!std::getline(in, value)) value = "(chua cap nhat)";
-        std::cout << "\033[36m" << labels[i] << ": \033[0m" << value << '\n';
+        if (!std::getline(inFile, strValue)) {
+            strValue = "(chua cap nhat)";
+        }
+        std::cout << "\033[36m" << szLabels[i] << ": \033[0m" << strValue << '\n';
     }
+    inFile.close();
     return true;
 }
