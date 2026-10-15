@@ -5,12 +5,11 @@
 
 class EmployeeManager {
 public:
-    explicit EmployeeManager(const std::string& fileName = "Administrators..txt");
-    bool authenticate(const std::string& username, const std::string& password) const;
-    void showAdminMenu();
+    explicit EmployeeManager(const std::string& strFileName = "Administrators.txt");
+    bool authenticateManager(const std::string& strUsername, const std::string& strPassword) const;
 private:
-    std::string fileName;
-    bool getPassword(const std::string& username, std::string& password) const;
+    std::string strFileName;
+    bool getPassword(const std::string& strUsername, std::string& strPassword) const;
 };
 
 #endif
