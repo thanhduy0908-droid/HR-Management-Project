@@ -74,14 +74,14 @@ string readPassword(const string& prompt) {
 }
 
 void pauseScreen() {
-    cout << "\n" << Color::yellow << "Nhan Enter de tiep tuc..." << Color::reset;
+    cout << Color::yellow << "Nhan Enter de tiep tuc..." << Color::reset;
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
 bool askContinue() {
     char answer;
     while (true) {
-        cout << "\n" << Color::yellow << Color::bold << "Ban muon tiep tuc chuong trinh? (Y/N): " << Color::reset;
+        cout << Color::yellow << Color::bold << " (Y/N)" << Color::reset;
         cin >> answer;
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         if (answer == 'Y' || answer == 'y') {
@@ -130,9 +130,8 @@ void adminMenu() {
         switch (choice) {
             case 1: case 2: case 3: case 4: case 5:
                 cout << Color::red << Color::bold
-                     << "Toi co phai nguoi dep trai nhat khong?\n"
+                     << "Toi co phai nguoi dep trai nhat khong?"
                      << Color::reset;
-                if (!askContinue()) {cout << Color::red << Color::bold << "MUAHAHAHHAHAHHA";}
                 break;
             case 6:
                 running = false;
@@ -171,10 +170,21 @@ void employeeMenu(Employee& employee, const string& username) {
         clearScreen();
         switch (choice) {
             case 1:
-                cout << Color::blue << Color::bold << "Phan nay la Profile";
+                //employee.displayProfile(username);
+                cout << Color::blue << Color::bold << "Phan nay la Profile \n" << "Return";
                 break;
             case 2: {
-                cout << Color::blue << Color::bold << "Phan nay la Doi mat khau";
+                /*string current = readPassword("Nhap mat khau hien tai: ");
+                string next = readPassword("Nhap mat khau moi: ");
+                string confirm = readPassword("Nhap lai mat khau moi: ");
+                if (next != confirm) {
+                    cout << Color::red << "Mat khau xac nhan khong trung khop.\n" << Color::reset;
+                } else if (employee.changePassword(username, current, next)) {
+                    cout << Color::green << "Doi mat khau thanh cong!\n" << Color::reset;
+                } else {
+                    cout << Color::red << "Doi mat khau that bai. Hay kiem tra mat khau hien tai/file du lieu.\n" << Color::reset;
+                }*/
+                cout << Color::blue << Color::bold << "Phan nay la Doi mat khau \n" << "Return" ;
                 break;
             }
             case 3:
@@ -267,12 +277,31 @@ int main() {
             }
             clearScreen();
             cout << Color::green << Color::bold << "Dang nhap Employee thanh cong!\n" << Color::reset;
+            /*if (employee.needsFirstLoginPasswordChange(username)) {
+                cout << Color::yellow << "Tai khoan dang dung mat khau mac dinh 111111. Vui long doi mat khau ngay.\n" << Color::reset;
+                bool changed = false;
+                while (!changed) {
+                    string next = readPassword("Nhap mat khau moi: ");
+                    string confirm = readPassword("Nhap lai mat khau moi: ");
+                    if (next != confirm || next == "111111" || next.empty()) {
+                        clearScreen();
+                        cout << Color::red << "Mat khau khong hop le hoac khong trung khop. Thu lai.\n" << Color::reset;
+                        continue;
+                    }
+                    changed = employee.changePassword(username, "111111", next);
+                    clearScreen();
+                    cout << (changed ? Color::green : Color::red)
+                         << (changed ? "Doi mat khau thanh cong!\n" : "Khong the cap nhat file. Thu lai.\n")
+                         << Color::reset;
+                }
+            }*/
             cout << Color::green << "Tai khoan dang dung mat khau mac dinh 111111. Vui long doi mat khau ngay.\n";
-            cout << "Phan nay viet them bat buoc doi mat khau mac dinh 111111";
+            cout << "Phan nay viet them bat buoc doi mat khau mac dinh 111111\n";
             pauseScreen();
             employeeMenu(employee, username);
         }
-        if (!askContinue()) programRunning = false;
+        cout << Color::red << "Roi khoi chuong trinh? \n";
+        if (askContinue()) programRunning = false;
         clearScreen();
     }
 
