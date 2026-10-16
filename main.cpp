@@ -321,6 +321,7 @@ int main() {
             }
             if (!bLoggedIn) {
                 cout << Color::red << Color::bold << "Ban da dang nhap sai 3 lan. Ket thuc chuong trinh.\n" << Color::reset;
+                pauseScreen();
                 break;
             }
 
