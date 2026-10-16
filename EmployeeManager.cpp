@@ -3,11 +3,22 @@
 
 #include <fstream>
 #include <iostream>
+#include <cstdio>
 
+/*************************************************************
+ * @Description Khai báo các hằng số và hàm hỗ trợ quản lý Employee.
+ * @attention   EMPLOYEE_FILE là file lưu tài khoản nhân viên.
+ * @attention   DEFAULT_PASSWORD là mật khẩu mặc định 111111.
+ *************************************************************/
 namespace {
     const std::string EMPLOYEE_FILE = "Employees.txt";
     const std::string DEFAULT_PASSWORD = "111111";
 
+    /*************************************************************
+     * @Description Kiểm tra username có hợp lệ hay không.
+     * @return      true nếu hợp lệ, false nếu không hợp lệ.
+     * @attention   Chỉ chấp nhận chữ cái, chữ số, dấu _ và -.
+     *************************************************************/
     bool isValidUsername(const std::string& strUsername) {
         if (strUsername.empty()) {
             return false;
@@ -72,6 +83,14 @@ bool EmployeeManager::authenticateManager(const std::string& strUsername, const 
     return getPassword(strUsername, strStoredPassword) && strStoredPassword == strPassword;
 }
 
+/*************************************************************
+ * @Description Thêm nhân viên mới vào hệ thống
+ *
+ * @return      true nếu thêm thành công, ngược lại trả về false
+ * @attention   Username phải hợp lệ và không được trùng
+ * @attention   Mật khẩu mặc định của nhân viên mới là 111111
+ * @attention   Tạo file [username].txt và cập nhật Employees.txt
+ *************************************************************/
 bool EmployeeManager::addEmployee (const std::string& strUsername, const std::string& strFullName, const std::string& strAddress, const std::string& strPhone, const std::string& strEmail) const {
     if (!isValidUsername(strUsername)) {
         std::cout << "Username khong hop le (chi dung chu, so, _ va -).\n";
@@ -151,13 +170,14 @@ bool EmployeeManager::addEmployee (const std::string& strUsername, const std::st
     return true;
 }
 
-/*
- * Chuc nang: Xoa nhan vien khoi he thong.
- * Tim nhan vien theo username.
- * Su dung RecordList de luu cac nhan vien con lai.
- * Cap nhat Employees.txt va xoa file thong tin ca nhan.
- * Tra ve true neu thanh cong, false neu that bai.
- */
+/*************************************************************
+ * @Description Xóa nhân viên khỏi hệ thống theo username
+ *
+ * @return      true nếu xóa thành công, ngược lại trả về false
+ * @attention   Tài khoản và file thông tin nhân viên phải tồn tại
+ * @attention   Sử dụng RecordList, file tạm và file sao lưu
+ *              để cập nhật Employees.txt và xóa [username].txt
+ *************************************************************/
 bool EmployeeManager::removeEmployee(const std::string& strUsername) const {
     if (!isValidUsername(strUsername)) {
         std::cout << "Username khong hop le.\n";
@@ -169,6 +189,7 @@ bool EmployeeManager::removeEmployee(const std::string& strUsername) const {
         std::cout << "Khong mo duoc Employees.txt.\n";
         return false;
     }
+    /* Chỉ giữ lại những nhân viên có username khác người cần xóa. */
     RecordList<std::pair<std::string, std::string>> remaining;
     std::string strUser, strPass;
     bool bFound = false;
@@ -196,7 +217,8 @@ bool EmployeeManager::removeEmployee(const std::string& strUsername) const {
         return false;
     }
     checkProfile.close();
-
+    
+    /* Dùng file tạm và file sao lưu để giảm nguy cơ mất dữ liệu. */
     const std::string strTempFile = EMPLOYEE_FILE + ".tmp";
     const std::string strBackupFile = EMPLOYEE_FILE + ".bak";
     std::ifstream checkBackup(strBackupFile);
@@ -232,6 +254,7 @@ bool EmployeeManager::removeEmployee(const std::string& strUsername) const {
         std::cout << "Khong cap nhat duoc Employees.txt.\n";
         return false;
     }
+    /* Chỉ hoàn tất khi xóa được file thông tin cá nhân. */
     if (std::remove(strProfileFile.c_str()) != 0) {
         std::remove(EMPLOYEE_FILE.c_str());
         std::rename(strBackupFile.c_str(), EMPLOYEE_FILE.c_str());
