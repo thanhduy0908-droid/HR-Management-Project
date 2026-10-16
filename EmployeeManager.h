@@ -13,6 +13,7 @@ public:
 private:
     std::string _strFileName;
     bool getPassword(const std::string& strUsername, std::string& strPassword) const;
+    friend class Employee;
 };
 
 #endif
