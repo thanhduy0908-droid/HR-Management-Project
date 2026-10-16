@@ -3,7 +3,12 @@
 
 #include <fstream>
 #include <iostream>
-
+/*
+ * Khai bao cac hang so dung chung cho quan ly nhan vien.
+ * EMPLOYEE_FILE: Ten file luu tai khoan nhan vien.
+ * DEFAULT_PASSWORD: Mat khau mac dinh khi tao nhan vien moi.
+ * isValidUsername: Kiem tra username co hop le hay khong.
+ */
 namespace {
     const std::string EMPLOYEE_FILE = "Employees.txt";
     const std::string DEFAULT_PASSWORD = "111111";
@@ -71,7 +76,13 @@ bool EmployeeManager::authenticateManager(const std::string& strUsername, const 
     // Lấy password của Admin và kiểm tra với password được nhập vào. Nếu trùng thì trả về true, ngược lại trả về false
     return getPassword(strUsername, strStoredPassword) && strStoredPassword == strPassword;
 }
-//add employee
+/*
+ * Chuc nang: Them nhan vien moi vao he thong.
+ * Kiem tra username hop le va chua ton tai.
+ * Tao file thong tin ca nhan [username].txt.
+ * Them tai khoan vao Employees.txt voi mat khau 111111.
+ * Tra ve true neu thanh cong, false neu that bai.
+ */
 bool EmployeeManager::addEmployee (const std::string& strUsername, const std::string& strFullName, const std::string& strAddress, const std::string& strPhone, const std::string& strEmail) const {
     if (!isValidUsername(strUsername)) {
         std::cout << "Username khong hop le (chi dung chu, so, _ va -).\n";
@@ -151,7 +162,13 @@ bool EmployeeManager::addEmployee (const std::string& strUsername, const std::st
     return true;
 }
 
-//remove employee
+/*
+ * Chuc nang: Xoa nhan vien khoi he thong.
+ * Tim nhan vien theo username.
+ * Su dung RecordList de luu cac nhan vien con lai.
+ * Cap nhat Employees.txt va xoa file thong tin ca nhan.
+ * Tra ve true neu thanh cong, false neu that bai.
+ */
 bool EmployeeManager::removeEmployee(const std::string& strUsername) const {
     if (!isValidUsername(strUsername)) {
         std::cout << "Username khong hop le.\n";
