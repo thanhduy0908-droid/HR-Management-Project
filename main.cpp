@@ -169,7 +169,7 @@ void adminMenu(EmployeeManager& manager) {
 
         clearScreen();
         switch (iChoice) {
-            // them employee
+            
             case 1: {
                 string strUsername, strFullName, strAddress, strPhone, strEmail;
                 cout << "Username: ";
@@ -190,7 +190,7 @@ void adminMenu(EmployeeManager& manager) {
                 }
                 break;
             }
-            // xoa employee
+            
             case 2: {
                 string strUsername;
                 cout << "Username can xoa: ";
