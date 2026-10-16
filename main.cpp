@@ -169,7 +169,7 @@ void adminMenu(EmployeeManager& manager) {
 
         clearScreen();
         switch (iChoice) {
-            
+            /* Nhập thông tin nhân viên mới và gọi hàm addEmployee(). */
             case 1: {
                 string strUsername, strFullName, strAddress, strPhone, strEmail;
                 cout << "Username: ";
@@ -190,7 +190,7 @@ void adminMenu(EmployeeManager& manager) {
                 }
                 break;
             }
-            
+             /* Xác nhận yêu cầu và gọi hàm removeEmployee(). */
             case 2: {
                 string strUsername;
                 cout << "Username can xoa: ";
