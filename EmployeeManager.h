@@ -7,7 +7,7 @@ class EmployeeManager {
 public:
     explicit EmployeeManager(const std::string& strFileName = "Administrators.txt");
     bool authenticateManager(const std::string& strUsername, const std::string& strPassword) const;
-//thong
+
     bool addEmployee (const std::string& strUsername, const std::string& strFullName, const std::string& strAddress, const std::string& strPhone, const std::string& strEmail) const;
     bool removeEmployee(const std::string& strUsername) const;
 private:
