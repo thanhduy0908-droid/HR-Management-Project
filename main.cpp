@@ -33,9 +33,9 @@ int readHiddenChar() {
 
 void clearScreen() {
 #ifdef _WIN32
-    std::system("cls");
+    system("cls");
 #else
-    std::system("clear");
+    system("clear");
 #endif
 }
 
