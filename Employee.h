@@ -1,7 +1,6 @@
 #ifndef EMPLOYEE_H
 #define EMPLOYEE_H
 
-#pragma once
 #include <string>
 #include <vector>
 #include <utility>
