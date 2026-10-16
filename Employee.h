@@ -8,18 +8,50 @@
 template <class DataType>
 class RecordList {
 private:
-    std::vector<DataType> items;
+    std::vector<DataType> _items; // Danh sách các phần tử dữ liệu
 public:
-    void add(const DataType& item) {
-        items.push_back(item);
-    }
-    const std::vector<DataType>& getItems() const {
-        return items;
-    }
-    size_t size() const {
-        return items.size();
-    }
+    /*************************************************************
+     * @Description Thêm phần tử vào danh sách
+     * @attention   Sử dụng push_back để thêm vào cuối vector
+     *************************************************************/
+    void add(const DataType& item);
+
+    /*************************************************************
+     * @Description Lấy tham chiếu đến danh sách các phần tử
+     * @return      Vector chứa các phần tử dữ liệu
+     *************************************************************/
+    const std::vector<DataType>& getItems() const;
+
+    /*************************************************************
+     * @Description Lấy số lượng phần tử hiện có trong danh sách
+     * @return      Kích thước của danh sách (size_t)
+     *************************************************************/
+    size_t size() const;
 };
+
+/*************************************************************
+ * @Description Thêm một phần tử vào danh sách
+ *************************************************************/
+template <class DataType>
+void RecordList<DataType>::add(const DataType& item) {
+    _items.push_back(item);
+}
+
+/*************************************************************
+ * @Description Lấy tham chiếu đến danh sách các phần tử
+ *************************************************************/
+template <class DataType>
+const std::vector<DataType>& RecordList<DataType>::getItems() const {
+    return _items;
+}
+
+/*************************************************************
+ * @Description Lấy số lượng phần tử hiện có trong danh sách
+ *************************************************************/
+template <class DataType>
+size_t RecordList<DataType>::size() const {
+    return _items.size();
+}
 
 class Employee {
 public:
@@ -29,7 +61,7 @@ public:
     bool displayProfile(const std::string& strUsername) const;
     bool needsFirstLoginPasswordChange(const std::string& strUsername) const;
 private:
-    std::string strFileName;
+    std::string _strFileName;
     bool getPassword(const std::string& strUsername, std::string& strPassword) const;
     friend class EmployeeManager;
 };
