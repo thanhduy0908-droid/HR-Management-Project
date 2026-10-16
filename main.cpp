@@ -169,7 +169,47 @@ void adminMenu(EmployeeManager& manager) {
 
         clearScreen();
         switch (iChoice) {
-            case 1: case 2: case 3: case 4: case 5:
+            // them employee
+            case 1: {
+                string strUsername, strFullName, strAddress, strPhone, strEmail;
+                cout << "Username: ";
+                getline(cin, strUsername);
+                cout << "Ho ten: ";
+                getline(cin, strFullName);
+                cout << "Dia chi: ";
+                getline(cin, strAddress);
+                cout << "So dien thoai: ";
+                getline(cin, strPhone);
+                cout << "Email: ";
+                getline(cin, strEmail);
+            
+                if (manager.addEmployee(strUsername, strFullName, strAddress, strPhone, strEmail)) {
+                    cout << "Them nhan vien thanh cong. Password mac dinh: 111111\n";
+                } else {
+                    cout << "Them nhan vien khong thanh cong.\n";
+                }
+                break;
+            }
+            // xoa employee
+            case 2: {
+                string strUsername;
+                cout << "Username can xoa: ";
+                getline(cin, strUsername);
+                char cConfirm;
+                cout << "Ban co chac muon xoa? (y/n): "; cin >> cConfirm;
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                if (cConfirm != 'y' && cConfirm != 'Y') {
+                    cout << "Da huy xoa.\n";
+                    break;
+                }
+                if (manager.removeEmployee(strUsername)) {
+                    cout << "Xoa nhan vien thanh cong.\n";
+                } else {
+                    cout << "Xoa nhan vien khong thanh cong.\n";
+                }
+                break;
+            }
+            case 3: case 4: case 5:
                 cout << Color::red << Color::bold << "Chuc nang nay dang duoc phat trien boi thanh vien trong nhom.\n" << Color::reset;
                 break;
             case 6:
