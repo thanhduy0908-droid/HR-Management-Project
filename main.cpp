@@ -16,6 +16,12 @@
 
 using namespace std;
 
+/*************************************************************
+ * @Description Đọc một ký tự từ bàn phím mà không hiển thị lên màn hình (ẩn password)
+ *
+ * @return      Mã ASCII của ký tự được nhập từ bàn phím
+ * @attention   Hỗ trợ tương thích đa nền tảng (_WIN32 dùng _getch, Linux/Mac dùng termios)
+ *************************************************************/
 int readHiddenChar() {
 #ifdef _WIN32
     return _getch();
@@ -31,6 +37,11 @@ int readHiddenChar() {
 #endif
 }
 
+/*************************************************************
+ * @Description Xóa sạch màn hình Terminal hiện tại
+ *
+ * @attention   Sử dụng lệnh "cls" trên Windows và "clear" trên hệ thống Unix/Linux
+ *************************************************************/
 void clearScreen() {
 #ifdef _WIN32
     system("cls");
@@ -49,6 +60,12 @@ namespace Color {
     const string bold = "\033[1m";
 }
 
+/*************************************************************
+ * @Description Đọc chuỗi mật khẩu ẩn từ bàn phím và hiển thị ký tự '*' thay thế
+ *
+ * @return      Chuỗi mật khẩu người dùng đã nhập
+ * @attention   Hỗ trợ xử lý phím Backspace để xóa ký tự khi nhập sai
+ *************************************************************/
 string readPassword(const string& strPrompt) {
     cout << strPrompt;
     string strPassword;
@@ -58,7 +75,7 @@ string readPassword(const string& strPrompt) {
             cout << '\n';
             break;
         }
-        if (iCh == 8) { // Backspace
+        if (iCh == 8) { // Xử lý Backspace
             if (!strPassword.empty()) {
                 strPassword.pop_back();
                 cout << "\b \b";
@@ -67,18 +84,27 @@ string readPassword(const string& strPrompt) {
             (void)readHiddenChar();
         } else if (iCh >= 32 && iCh <= 126) {
             strPassword.push_back(static_cast<char>(iCh));
-            cout << '*';
+            cout << '*'; // In dấu sao che mật khẩu
         }
     }
     return strPassword;
 }
 
+/*************************************************************
+ * @Description Dừng màn hình và chờ người dùng nhấn Enter để tiếp tục
+ *************************************************************/
 void pauseScreen() {
     cout << Color::yellow << "Nhan Enter de tiep tuc..." << Color::reset;
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
+/*************************************************************
+ * @Description Hỏi người dùng có muốn tiếp tục tác vụ được gọi tên hay không (Y/N)
+ *
+ * @return      true nếu chọn Y/y, false nếu chọn N/n
+ * @attention   Xử lý kiểm tra lỗi nhập sai ký tự và yêu cầu nhập lại
+ *************************************************************/
 bool askContinue() {
     char cAnswer;
     while (true) {
@@ -102,6 +128,9 @@ bool askContinue() {
     }
 }
 
+/*************************************************************
+ * @Description Hiển thị giao diện menu dành cho tài khoản Admin
+ *************************************************************/
 void showAdminMenu() {
     cout << Color::red << Color::bold
          << " ******************************\n"
@@ -117,6 +146,11 @@ void showAdminMenu() {
          << Color::red << "**********************\n" << Color::reset;
 }
 
+/*************************************************************
+ * @Description Quản lý các chức năng trong menu Admin
+ *
+ * @attention   Cho phép thêm, xóa, tìm, cập nhật, hiển thị tất cả nhân viên và đăng xuất quyền admin
+ *************************************************************/
 void adminMenu(EmployeeManager& manager) {
     bool bRunning = true;
     while (bRunning) {
@@ -153,6 +187,11 @@ void adminMenu(EmployeeManager& manager) {
     }
 }
 
+/*************************************************************
+ * @Description Quản lý các chức năng trong menu Employee
+ *
+ * @attention   Cho phép xem thông tin profile cá nhân, đổi mật khẩu tài khoản và đăng xuất  quyền nhân viên
+ *************************************************************/
 void employeeMenu(Employee& employee, const string& strUsername) {
     bool bRunning = true;
     while (bRunning) {
@@ -179,11 +218,8 @@ void employeeMenu(Employee& employee, const string& strUsername) {
 
         clearScreen();
         switch (iChoice) {
-            case 1:
-                cout << Color::red << Color::bold << "Chuc nang nay dang duoc phat trien boi thanh vien trong nhom.\n" << Color::reset;  //TODO: Thêm tính năng hiển thị thông tin cá nhân của Employee
-                break;
-            case 2:
-                cout << Color::red << Color::bold << "Chuc nang nay dang duoc phat trien boi thanh vien trong nhom.\n" << Color::reset;  //TODO: Thêm tính năng đổi mật khẩu của Employee
+            case 1: case 2:
+                cout << Color::red << Color::bold << "Chuc nang nay dang duoc phat trien boi thanh vien trong nhom.\n" << Color::reset;
                 break;
             case 3:
                 bRunning = false;
@@ -204,10 +240,15 @@ int main() {
     EmployeeManager manager("Administrators.txt");
     bool bProgramRunning = true;
 
+    // Cấu hình hỗ trợ mã màu ANSI Escape Sequences trên terminal của Windows
+    // Lấy định danh (handle) của màn hình console đầu ra chuẩn (Standard Output)
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     DWORD dwMode = 0;
+    // Kiểm tra xem handle có hợp lệ không, đồng thời lấy các chế độ console hiện tại
     if (hOut != INVALID_HANDLE_VALUE && GetConsoleMode(hOut, &dwMode)) {
+        // Bật cờ hỗ trợ xử lý mã điều khiển Terminal ảo (cho phép in chữ có màu sắc, đổi màu chữ,...)
         dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+        // Cập nhật lại chế độ mới cho console của Windows
         SetConsoleMode(hOut, dwMode);
     }
 
@@ -263,6 +304,7 @@ int main() {
             }
         } else {
             bool bLoggedIn = false;
+            // Cho phép người dùng đăng nhập tối đa 3 lần
             for (int iAttempts = 1; iAttempts <= 3; ++iAttempts) {
                 if (employee.authenticateEmployee(strUsername, strPassword)) {
                     bLoggedIn = true;
@@ -283,7 +325,7 @@ int main() {
             }
 
             cout << Color::green << Color::bold << "Dang nhap Employee thanh cong!\n" << Color::reset;
-            cout << Color::yellow << "Tai khoan dang dung mat khau mac dinh 111111. Vui long doi mat khau ngay.\n" << Color::reset;  //TODO: Thêm phần bắt buộc đổi mật khẩu khi Employee đăng nhập lần đầu
+            cout << Color::yellow << "Tai khoan dang dung mat khau mac dinh 111111. Vui long doi mat khau ngay.\n" << Color::reset;
             pauseScreen();
             employeeMenu(employee, strUsername);
         }
