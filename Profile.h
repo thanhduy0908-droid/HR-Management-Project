@@ -153,15 +153,15 @@ private:
 
 	static const std::string SEPARATOR_LINE;
 
-std::string _strUsername;
+	std::string _strUsername;
 
-std::string _strFullName;
+	std::string _strFullName;
 
-std::string _strAddress;
+	std::string _strAddress;
 
-std::string _strPhoneNumber;
+	std::string _strPhoneNumber;
 
-std::string _strEmail;
+	std::string _strEmail;
 
 };
 
