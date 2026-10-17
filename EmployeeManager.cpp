@@ -1,6 +1,6 @@
 #include "EmployeeManager.h"
 #include "Employee.h"
-
+#include "Profile.h"
 #include <fstream>
 #include <iostream>
 #include <cstdio>
@@ -263,4 +263,18 @@ bool EmployeeManager::removeEmployee(const std::string& strUsername) const {
     }
     std::remove(strBackupFile.c_str());
     return true;
+}
+/*************************************************************
+* @Description Cập nhật thông tin nhân viên theo username
+*
+* @return true nếu đã lưu thay đổi thành công, ngược lại trả về false
+* @attention Username phải hợp lệ vì được dùng để tạo tên file [username].txt
+* @attention Việc chọn thuộc tính và ghi file do Profile::updateByUsername xử lý
+*************************************************************/
+bool EmployeeManager::updateEmployee(const std::string& strUsername) const {
+    if (!isValidUsername(strUsername)) {
+        std::cout << "Username khong hop le.\n";
+        return false;
+    }
+    return Profile::updateByUsername(strUsername);
 }
