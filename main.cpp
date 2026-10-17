@@ -168,22 +168,7 @@ void adminMenu(EmployeeManager& manager) {
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         clearScreen();
-        // Tìm employee theo username (chức năng 3) và hiển thị toàn bộ employee (chức năng 5)
-        if (iChoice == 3 || iChoice == 5) {
-            
-            cout << Color::reset;
-            if (iChoice == 3) {
-                string strFindUsername;
-                cout << "Username can tim: ";
-                getline(cin, strFindUsername);
-                manager.searchEmployee(strFindUsername);
-            } else {
-                manager.displayAllEmployees();
-            }
-            cout << "Return? ";
-            bRunning = askContinue();
-            continue;
-        }
+        
         switch (iChoice) {
             // Nhập thông tin nhân viên mới và gọi hàm addEmployee()
             case 1: {
@@ -225,6 +210,14 @@ void adminMenu(EmployeeManager& manager) {
                 }
                 break;
             }
+            // Tìm employee theo username (chức năng 3)
+            case 3: {
+                string strFindUsername;
+                cout << Color::reset << "Username can tim: ";
+                getline(cin, strFindUsername);
+                manager.searchEmployee(strFindUsername);
+                break;
+            }
              case 4: {
                 string strUsername;
                 cout << "Username can cap nhat: ";
@@ -232,8 +225,9 @@ void adminMenu(EmployeeManager& manager) {
                 manager.updateEmployee(strUsername);
                 break;
             }
-            case 3: case 5:
-                cout << Color::red << Color::bold << "Chuc nang nay dang duoc phat trien boi thanh vien trong nhom.\n" << Color::reset;
+            // Hiển thị toàn bộ employee (chức năng 5)
+            case 5:
+                manager.displayAllEmployees();
                 break;
             case 6:
                 bRunning = false;
@@ -280,16 +274,15 @@ void employeeMenu(Employee& employee, const string& strUsername) {
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         clearScreen();
-        // Employee xem thông tin tài khoản của chính mình (chức năng 1)
-        if (iChoice == 1) {
-            EmployeeManager profileManager;
-            profileManager.viewOwnProfile(strUsername);
-            cout << "Return? ";
-            bRunning = askContinue();
-            continue;
-        }
+        
         switch (iChoice) {
-            case 1: case 2:
+            // Employee xem thông tin tài khoản của chính mình (chức năng 1)
+            case 1: {
+                EmployeeManager profileManager;
+                profileManager.viewOwnProfile(strUsername);
+                break;
+            } 
+            case 2:
                 cout << Color::red << Color::bold << "Chuc nang nay dang duoc phat trien boi thanh vien trong nhom.\n" << Color::reset;
                 break;
             case 3:
