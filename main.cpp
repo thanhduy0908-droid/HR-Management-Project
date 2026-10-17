@@ -168,8 +168,24 @@ void adminMenu(EmployeeManager& manager) {
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         clearScreen();
+        // Tìm employee theo username (chức năng 3) và hiển thị toàn bộ employee (chức năng 5)
+        if (iChoice == 3 || iChoice == 5) {
+            
+            cout << Color::reset;
+            if (iChoice == 3) {
+                string strFindUsername;
+                cout << "Username can tim: ";
+                getline(cin, strFindUsername);
+                manager.searchEmployee(strFindUsername);
+            } else {
+                manager.displayAllEmployees();
+            }
+            cout << "Return? ";
+            bRunning = askContinue();
+            continue;
+        }
         switch (iChoice) {
-            /* Nhập thông tin nhân viên mới và gọi hàm addEmployee(). */
+            // Nhập thông tin nhân viên mới và gọi hàm addEmployee()
             case 1: {
                 string strUsername, strFullName, strAddress, strPhone, strEmail;
                 cout << "Username: ";
@@ -190,7 +206,7 @@ void adminMenu(EmployeeManager& manager) {
                 }
                 break;
             }
-             /* Xác nhận yêu cầu và gọi hàm removeEmployee(). */
+             // Xác nhận yêu cầu và gọi hàm removeEmployee()
             case 2: {
                 string strUsername;
                 cout << "Username can xoa: ";
@@ -257,6 +273,14 @@ void employeeMenu(Employee& employee, const string& strUsername) {
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         clearScreen();
+        // Employee xem thông tin tài khoản của chính mình (chức năng 1)
+        if (iChoice == 1) {
+            EmployeeManager profileManager;
+            profileManager.viewOwnProfile(strUsername);
+            cout << "Return? ";
+            bRunning = askContinue();
+            continue;
+        }
         switch (iChoice) {
             case 1: case 2:
                 cout << Color::red << Color::bold << "Chuc nang nay dang duoc phat trien boi thanh vien trong nhom.\n" << Color::reset;
