@@ -265,6 +265,47 @@ bool EmployeeManager::removeEmployee(const std::string& strUsername) const {
     return true;
 }
 /*************************************************************
+ * @Description Tìm employee theo username và hiển thị đầy đủ thông tin
+ *
+ * @return      Không có
+ * @attention   Báo lỗi nếu username không hợp lệ
+ * @attention   Báo lỗi nếu không tìm thấy employee hoặc file thông tin không tồn tại
+ *************************************************************/
+void EmployeeManager::searchEmployee(const std::string& strUsername) const {
+    // Kiểm tra username trước vì username được dùng để ghép thành tên file [username].txt
+    if (!isValidUsername(strUsername)) {
+        std::cout << "Username khong hop le.\n";
+        return;
+    }
+    Profile::searchByUsername(strUsername);
+}
+ 
+/*************************************************************
+ * @Description Hiển thị thông tin toàn bộ employee
+ *
+ * @return      Không có
+ * @attention   Báo lỗi nếu không mở được Employees.txt
+ * @attention   Cảnh báo và bỏ qua employee nào thiếu file thông tin
+ *************************************************************/
+void EmployeeManager::displayAllEmployees() const {
+    Profile::displayAll();
+}
+ 
+/*************************************************************
+ * @Description Employee xem thông tin tài khoản của chính mình
+ *
+ * @return      Không có
+ * @attention   strUsername là username của employee đang đăng nhập
+ * @attention   Báo lỗi nếu file thông tin [username].txt không tồn tại
+ *************************************************************/
+void EmployeeManager::viewOwnProfile(const std::string& strUsername) const {
+    if (!isValidUsername(strUsername)) {
+        std::cout << "Username khong hop le.\n";
+        return;
+    }
+    Profile::viewOwnProfile(strUsername);
+}
+/*************************************************************
 * @Description Cập nhật thông tin nhân viên theo username
 *
 * @return true nếu đã lưu thay đổi thành công, ngược lại trả về false
