@@ -225,7 +225,14 @@ void adminMenu(EmployeeManager& manager) {
                 }
                 break;
             }
-            case 3: case 4: case 5:
+             case 4: {
+                string strUsername;
+                cout << "Username can cap nhat: ";
+                getline(cin, strUsername);
+                manager.updateEmployee(strUsername);
+                break;
+            }
+            case 3: case 5:
                 cout << Color::red << Color::bold << "Chuc nang nay dang duoc phat trien boi thanh vien trong nhom.\n" << Color::reset;
                 break;
             case 6:
