@@ -55,3 +55,105 @@ bool Employee::authenticateEmployee(const std::string& strUsername, const std::s
     // Lấy password của nhân viên và kiểm tra với password được nhập vào. Nếu trùng thì trả về true, ngược lại trả về false
     return getPassword(strUsername, strStoredPassword) && strStoredPassword == strPassword;
 }
+
+/*************************************************************
+ * @Description Kiểm tra xem nhân viên có đang dùng mật khẩu mặc định lần đầu không
+ *
+ * @return      true nếu mật khẩu hiện tại là "111111", ngược lại trả về false
+ * @attention   Dùng để bắt buộc người dùng đổi mật khẩu ngay trong lần đăng nhập đầu tiên
+ *************************************************************/
+bool Employee::needsFirstLoginPasswordChange(const std::string& strUsername) const {
+    std::string strStoredPassword;
+    return getPassword(strUsername, strStoredPassword) && strStoredPassword == "111111";
+}
+
+/*************************************************************
+ * @Description Thay đổi mật khẩu cho nhân viên và lưu vào file
+ *
+ * @return      true nếu đổi mật khẩu thành công, false nếu sai mật khẩu hiện tại hoặc lỗi file
+ * @attention   Sử dụng RecordList template để lưu trữ bộ nhớ tạm thời
+ * @attention   Sử dụng file tạm (.tmp) để ghi dữ liệu an toàn trước khi thay thế file chính
+ *************************************************************/
+
+bool Employee::changePassword(const std::string& strUsername,
+                              const std::string& strCurrentPassword,
+                              const std::string& strNewPassword) {
+    // Kiểm tra mật khẩu mới không rỗng và xác thực mật khẩu hiện tại có đúng không
+    if (strNewPassword.empty() || !authenticateEmployee(strUsername, strCurrentPassword)) {
+        return false;
+    }
+
+    std::string strTargetFile = strFileName.empty() ? "Employees.txt" : strFileName;
+
+    std::ifstream inFile(strTargetFile);
+    if (!inFile) {
+        return false;
+    }
+
+    RecordList<std::pair<std::string, std::string>> employeeList;
+    std::string strUser, strPass;
+    bool bFound = false;
+
+    // Đọc dữ liệu cũ vào RecordList và cập nhật mật khẩu mới cho đúng user
+    while (inFile >> strUser >> strPass) {
+        if (strUser == strUsername) {
+            strPass = strNewPassword;
+            bFound = true;
+        }
+        employeeList.add({strUser, strPass});
+    }
+    inFile.close();
+
+    if (!bFound) {
+        return false;
+    }
+
+    const std::string strTempFile = strTargetFile + ".tmp";
+    std::ofstream outFile(strTempFile, std::ios::trunc);
+    if (!outFile) {
+        return false;
+    }
+
+    // Lặp qua danh sách để ghi ra file tạm
+    for (const auto& employee : employeeList.getItems()) {
+        outFile << employee.first << ' ' << employee.second << '\n';
+    }
+    outFile.close();
+
+    std::remove(strTargetFile.c_str());
+
+    // Đổi tên file tạm thành file chính để hoàn tất quá trình thay đổi mật khẩu
+    if (std::rename(strTempFile.c_str(), strTargetFile.c_str()) != 0) {
+        std::remove(strTempFile.c_str());
+        return false;
+    }
+    return true;
+}
+
+/*************************************************************
+ * @Description Hiển thị thông tin profile cá nhân của nhân viên từ file riêng
+ *
+ * @return      true nếu đọc file thành công, false nếu không tìm thấy file
+ * @attention   Đọc lần lượt 4 thông tin: Ho ten, Dia chi, So dien thoai, Email
+ *************************************************************/
+
+bool Employee::displayProfile(const std::string& strUsername) const {
+    // Mở file profile riêng ứng với tên username (<username>.txt)
+    std::ifstream inFile(strUsername + ".txt");
+    if (!inFile) {
+        std::cout << "\033[31mKhong tim thay file thong tin: " << strUsername << ".txt\033[0m\n";
+        return false;
+    }
+
+    const char* szLabels[] = {"Ho ten", "Dia chi", "So dien thoai", "Email"};
+    std::string strValue;
+    for (int i = 0; i < 4; ++i) {
+        // Đọc từng dòng, nếu file thiếu dòng nào thì gán giá trị mặc định cho dòng đó
+        if (!std::getline(inFile, strValue)) {
+            strValue = "(chua cap nhat)";
+        }
+        std::cout << "\033[36m" << szLabels[i] << ": \033[0m" << strValue << '\n';
+    }
+    inFile.close();
+    return true;
+}
