@@ -83,7 +83,7 @@ bool Employee::changePassword(const std::string& strUsername,
         return false;
     }
 
-    std::string strTargetFile = strFileName.empty() ? "Employees.txt" : strFileName;
+    std::string strTargetFile = _strFileName.empty() ? "Employees.txt" : _strFileName;
 
     std::ifstream inFile(strTargetFile);
     if (!inFile) {
