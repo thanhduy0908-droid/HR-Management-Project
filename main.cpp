@@ -282,9 +282,19 @@ void employeeMenu(Employee& employee, const string& strUsername) {
                 profileManager.viewOwnProfile(strUsername);
                 break;
             } 
-            case 2:
-                cout << Color::red << Color::bold << "Chuc nang nay dang duoc phat trien boi thanh vien trong nhom.\n" << Color::reset;
+            case 2: {
+                string strCurrent = readPassword("Nhap mat khau hien tai: ");
+                string strNext = readPassword("Nhap mat khau moi: ");
+                string strConfirm = readPassword("Nhap lai mat khau moi: ");
+                if (strNext != strConfirm) {
+                    cout << Color::red << "Mat khau xac nhan khong trung khop.\n" << Color::reset;
+                } else if (employee.changePassword(strUsername, strCurrent, strNext)) {
+                    cout << Color::green << "Doi mat khau thanh cong!\n" << Color::reset;
+                } else {
+                    cout << Color::red << "Doi mat khau that bai. Hay kiem tra lai mat khau hien tai.\n" << Color::reset;
+                }
                 break;
+            }
             case 3:
                 bRunning = false;
                 cout << Color::green << "Dang roi menu Employee...\n" << Color::reset;
