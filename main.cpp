@@ -210,7 +210,7 @@ void adminMenu(EmployeeManager& manager) {
                 }
                 break;
             }
-            // Tìm employee theo username (chức năng 3)
+            // Tìm employee theo username 
             case 3: {
                 string strFindUsername;
                 cout << Color::reset << "Username can tim: ";
@@ -225,7 +225,7 @@ void adminMenu(EmployeeManager& manager) {
                 manager.updateEmployee(strUsername);
                 break;
             }
-            // Hiển thị toàn bộ employee (chức năng 5)
+            // Hiển thị toàn bộ employee
             case 5:
                 manager.displayAllEmployees();
                 break;
@@ -276,7 +276,7 @@ void employeeMenu(Employee& employee, const string& strUsername) {
         clearScreen();
         
         switch (iChoice) {
-            // Employee xem thông tin tài khoản của chính mình (chức năng 1)
+            // Employee xem thông tin tài khoản của chính mình
             case 1: {
                 EmployeeManager profileManager;
                 profileManager.viewOwnProfile(strUsername);
