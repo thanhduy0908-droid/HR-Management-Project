@@ -390,7 +390,25 @@ int main() {
             }
 
             cout << Color::green << Color::bold << "Dang nhap Employee thanh cong!\n" << Color::reset;
-            cout << Color::yellow << "Tai khoan dang dung mat khau mac dinh 111111. Vui long doi mat khau ngay.\n" << Color::reset;
+            // Kiểm tra nếu nhân viên đăng nhập lần đầu với mật khẩu mặc định "111111"
+            if (employee.needsFirstLoginPasswordChange(strUsername)) {
+                cout << Color::yellow << "Tai khoan dang dung mat khau mac dinh 111111. Vui long doi mat khau ngay.\n" << Color::reset;
+                bool bChanged = false;
+                while (!bChanged) {
+                    string strNext = readPassword("Nhap mat khau moi: ");
+                    string strConfirm = readPassword("Nhap lai mat khau moi: ");
+                    if (strNext != strConfirm || strNext == "111111" || strNext.empty()) {
+                        clearScreen();
+                        cout << Color::red << "Mat khau khong hop le hoac khong trung khop. Thu lai.\n" << Color::reset;
+                        continue;
+                    }
+                    bChanged = employee.changePassword(strUsername, "111111", strNext);
+                    clearScreen();
+                    cout << (bChanged ? Color::green : Color::red)
+                         << (bChanged ? "Doi mat khau thanh cong!\n" : "Khong the cap nhat file. Thu lai.\n")
+                         << Color::reset;
+                }
+            }
             pauseScreen();
             employeeMenu(employee, strUsername);
         }
