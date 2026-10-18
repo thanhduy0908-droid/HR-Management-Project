@@ -136,24 +136,3 @@ bool Employee::changePassword(const std::string& strUsername,
  * @return      true nếu đọc file thành công, false nếu không tìm thấy file
  * @attention   Đọc lần lượt 4 thông tin: Ho ten, Dia chi, So dien thoai, Email
  *************************************************************/
-
-bool Employee::displayProfile(const std::string& strUsername) const {
-    // Mở file profile riêng ứng với tên username (<username>.txt)
-    std::ifstream inFile(strUsername + ".txt");
-    if (!inFile) {
-        std::cout << "\033[31mKhong tim thay file thong tin: " << strUsername << ".txt\033[0m\n";
-        return false;
-    }
-
-    const char* szLabels[] = {"Ho ten", "Dia chi", "So dien thoai", "Email"};
-    std::string strValue;
-    for (int i = 0; i < 4; ++i) {
-        // Đọc từng dòng, nếu file thiếu dòng nào thì gán giá trị mặc định cho dòng đó
-        if (!std::getline(inFile, strValue)) {
-            strValue = "(chua cap nhat)";
-        }
-        std::cout << "\033[36m" << szLabels[i] << ": \033[0m" << strValue << '\n';
-    }
-    inFile.close();
-    return true;
-}
