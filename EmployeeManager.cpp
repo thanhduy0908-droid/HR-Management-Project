@@ -104,7 +104,7 @@ bool EmployeeManager::addEmployee (const std::string& strUsername, const std::st
     std::string strValidPhone;
     std::string strValidEmail;
     if (!Profile::getPhoneNumber(strPhone, strValidPhone)) {
-        std::cout << "So dien thoai khong hop le (chi gom chu so, tu 9 den 11 chu so).\n";
+        std::cout << "So dien thoai khong hop le (chi gom chu so, tu 10 den 11 chu so).\n";
         return false;
     }
     if (!Profile::getEmail(strEmail, strValidEmail)) {
