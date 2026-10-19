@@ -79,8 +79,8 @@ bool Profile::setAddress(const string& strAddress) {
 }
 
 bool Profile::setPhoneNumber(const string& strPhoneNumber) {
-    const string strValue = trimSpaces(strPhoneNumber);
-    if (!Profile::isValidPhoneNumber(strValue)) {
+    string strValue = "";
+    if (!Profile::getPhoneNumber(strPhoneNumber, strValue)) {
         return false;
     }
     this->_strPhoneNumber = strValue;
@@ -88,11 +88,29 @@ bool Profile::setPhoneNumber(const string& strPhoneNumber) {
 }
 
 bool Profile::setEmail(const string& strEmail) {
-    const string strValue = trimSpaces(strEmail);
-    if (!Profile::isValidEmail(strValue)) {
+    string strValue = "";
+    if (!Profile::getEmail(strEmail, strValue)) {
         return false;
     }
     this->_strEmail = strValue;
+    return true;
+}
+
+bool Profile::getPhoneNumber(const string& strInput, string& strPhoneNumber) {
+    const string strValue = trimSpaces(strInput);
+    if (!Profile::isValidPhoneNumber(strValue)) {
+        return false;
+    }
+    strPhoneNumber = strValue;
+    return true;
+}
+
+bool Profile::getEmail(const string& strInput, string& strEmail) {
+    const string strValue = trimSpaces(strInput);
+    if (!Profile::isValidEmail(strValue)) {
+        return false;
+    }
+    strEmail = strValue;
     return true;
 }
 
