@@ -256,7 +256,7 @@ bool Profile::updateByUsername(const string& strUsername) {
                     bChanged = true;
                     cout << "Da doi so dien thoai." << endl;
                 } else {
-                    cout << "Loi: So dien thoai chi gom chu so va co tu 9 den 11 chu so!" << endl;
+                    cout << "Loi: So dien thoai chi gom chu so va co tu 10 den 11 chu so!" << endl;
                 }
                 break;
             case 4:
@@ -318,7 +318,7 @@ void Profile::displayByUsername(const string& strUsername) {
 }
 
 bool Profile::isValidPhoneNumber(const string& strPhoneNumber) {
-    if (strPhoneNumber.size() < 9 || strPhoneNumber.size() > 11) {
+    if (strPhoneNumber.size() < 10 || strPhoneNumber.size() > 11) {
         return false;
     }
     for (size_t i = 0; i < strPhoneNumber.size(); ++i) {
