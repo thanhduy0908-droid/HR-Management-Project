@@ -88,8 +88,9 @@ bool EmployeeManager::authenticateManager(const std::string& strUsername, const 
  *
  * @return      true nếu thêm thành công, ngược lại trả về false
  * @attention   Username phải hợp lệ và không được trùng
+ * @attention   Số điện thoại và email phải hợp lệ (kiểm tra bằng Profile::getPhoneNumber và Profile::getEmail)
  * @attention   Mật khẩu mặc định của nhân viên mới là 111111
- * @attention   Tạo file [username].txt và cập nhật Employees.txt
+ * @attention   Tạo file [username].txt (lưu số điện thoại và email đã chuẩn hóa) và cập nhật Employees.txt
  *************************************************************/
 bool EmployeeManager::addEmployee (const std::string& strUsername, const std::string& strFullName, const std::string& strAddress, const std::string& strPhone, const std::string& strEmail) const {
     if (!isValidUsername(strUsername)) {
@@ -98,6 +99,16 @@ bool EmployeeManager::addEmployee (const std::string& strUsername, const std::st
     }
     if (strFullName.empty() || strAddress.empty() || strPhone.empty() || strEmail.empty()) {
         std::cout << "Khong duoc de trong thong tin nhan vien.\n";
+        return false;
+    }
+    std::string strValidPhone;
+    std::string strValidEmail;
+    if (!Profile::getPhoneNumber(strPhone, strValidPhone)) {
+        std::cout << "So dien thoai khong hop le (chi gom chu so, tu 9 den 11 chu so).\n";
+        return false;
+    }
+    if (!Profile::getEmail(strEmail, strValidEmail)) {
+        std::cout << "Email khong hop le (vi du: ten@congty.com).\n";
         return false;
     }
     std::ifstream inFile(EMPLOYEE_FILE);
@@ -126,7 +137,7 @@ bool EmployeeManager::addEmployee (const std::string& strUsername, const std::st
         bNeedsNewline = (cLastCharacter != '\n');
     }
     inFile.close();
-    
+
     const std::string strProfileFile = strUsername + ".txt";
     std::ifstream checkProfile(strProfileFile);
     if (checkProfile.good()) {
@@ -134,7 +145,7 @@ bool EmployeeManager::addEmployee (const std::string& strUsername, const std::st
         return false;
     }
     checkProfile.close();
-    
+
     std::ofstream outProfile(strProfileFile);
     if (!outProfile) {
         std::cout << "Khong tao duoc file thong tin.\n";
@@ -142,8 +153,8 @@ bool EmployeeManager::addEmployee (const std::string& strUsername, const std::st
     }
     outProfile << strFullName << '\n'
                << strAddress << '\n'
-               << strPhone << '\n'
-               << strEmail << '\n';
+               << strValidPhone << '\n'
+               << strValidEmail << '\n';
     outProfile.close();
     if (!outProfile) {
         std::remove(strProfileFile.c_str());
