@@ -6,38 +6,36 @@
 #include <limits>
 #include <sstream>
 
-using namespace std;
-
-const string Profile::EMPLOYEES_FILE_NAME = "Employees.txt";
-const string Profile::PROFILE_FILE_EXTENSION = ".txt";
-const string Profile::SEPARATOR_LINE = "----------------------------------------";
+const std::string Profile::EMPLOYEES_FILE_NAME = "Employees.txt";
+const std::string Profile::PROFILE_FILE_EXTENSION = ".txt";
+const std::string Profile::SEPARATOR_LINE = "----------------------------------------";
 
 namespace {
-string trimSpaces(const string& strText) {
-    const size_t iBegin = strText.find_first_not_of(" \t\r\n");
-    if (iBegin == string::npos) {
+std::string trimSpaces(const std::string& strText) {
+    const std::size_t iBegin = strText.find_first_not_of(" \t\r\n");
+    if (iBegin == std::string::npos) {
         return "";
     }
-    const size_t iEnd = strText.find_last_not_of(" \t\r\n");
+    const std::size_t iEnd = strText.find_last_not_of(" \t\r\n");
     return strText.substr(iBegin, iEnd - iBegin + 1);
 }
 }
 
 Profile::Profile() : _strUsername(""), _strFullName(""), _strAddress(""), _strPhoneNumber(""), _strEmail("") {}
 
-bool Profile::loadFromFile(const string& strUsername) {
-    const string strFilePath = strUsername + Profile::PROFILE_FILE_EXTENSION;
-    ifstream fileProfile;
+bool Profile::loadFromFile(const std::string& strUsername) {
+    const std::string strFilePath = strUsername + Profile::PROFILE_FILE_EXTENSION;
+    std::ifstream fileProfile;
     fileProfile.open(strFilePath.c_str());
     if (!fileProfile.is_open()) {
         return false;
     }
     // Mỗi thông tin được lưu trên một dòng theo thứ tự: họ tên, địa chỉ, số điện thoại, email
-    string strFullName = "";
-    string strAddress = "";
-    string strPhoneNumber = "";
-    string strEmail = "";
-    bool bResult = getline(fileProfile, strFullName) && getline(fileProfile, strAddress) && getline(fileProfile, strPhoneNumber) && getline(fileProfile, strEmail);
+    std::string strFullName = "";
+    std::string strAddress = "";
+    std::string strPhoneNumber = "";
+    std::string strEmail = "";
+    bool bResult = std::getline(fileProfile, strFullName) && std::getline(fileProfile, strAddress) && std::getline(fileProfile, strPhoneNumber) && std::getline(fileProfile, strEmail);
     fileProfile.close();
     if (!bResult) {
         return false;
@@ -51,17 +49,17 @@ bool Profile::loadFromFile(const string& strUsername) {
 }
 
 void Profile::display() const {
-    cout << Profile::SEPARATOR_LINE << endl;
-    cout << "Username : " << this->_strUsername << endl;
-    cout << "Ho ten : " << this->_strFullName << endl;
-    cout << "Dia chi : " << this->_strAddress << endl;
-    cout << "So dien thoai : " << this->_strPhoneNumber << endl;
-    cout << "Email : " << this->_strEmail << endl;
-    cout << Profile::SEPARATOR_LINE << endl;
+    std::cout << Profile::SEPARATOR_LINE << std::endl;
+    std::cout << "Username : " << this->_strUsername << std::endl;
+    std::cout << "Ho ten : " << this->_strFullName << std::endl;
+    std::cout << "Dia chi : " << this->_strAddress << std::endl;
+    std::cout << "So dien thoai : " << this->_strPhoneNumber << std::endl;
+    std::cout << "Email : " << this->_strEmail << std::endl;
+    std::cout << Profile::SEPARATOR_LINE << std::endl;
 }
 
-bool Profile::setFullName(const string& strFullName) {
-    const string strValue = trimSpaces(strFullName);
+bool Profile::setFullName(const std::string& strFullName) {
+    const std::string strValue = trimSpaces(strFullName);
     if (strValue.empty()) {
         return false;
     }
@@ -69,8 +67,8 @@ bool Profile::setFullName(const string& strFullName) {
     return true;
 }
 
-bool Profile::setAddress(const string& strAddress) {
-    const string strValue = trimSpaces(strAddress);
+bool Profile::setAddress(const std::string& strAddress) {
+    const std::string strValue = trimSpaces(strAddress);
     if (strValue.empty()) {
         return false;
     }
@@ -78,8 +76,8 @@ bool Profile::setAddress(const string& strAddress) {
     return true;
 }
 
-bool Profile::setPhoneNumber(const string& strPhoneNumber) {
-    string strValue = "";
+bool Profile::setPhoneNumber(const std::string& strPhoneNumber) {
+    std::string strValue = "";
     if (!Profile::getPhoneNumber(strPhoneNumber, strValue)) {
         return false;
     }
@@ -87,8 +85,8 @@ bool Profile::setPhoneNumber(const string& strPhoneNumber) {
     return true;
 }
 
-bool Profile::setEmail(const string& strEmail) {
-    string strValue = "";
+bool Profile::setEmail(const std::string& strEmail) {
+    std::string strValue = "";
     if (!Profile::getEmail(strEmail, strValue)) {
         return false;
     }
@@ -96,8 +94,8 @@ bool Profile::setEmail(const string& strEmail) {
     return true;
 }
 
-bool Profile::getPhoneNumber(const string& strInput, string& strPhoneNumber) {
-    const string strValue = trimSpaces(strInput);
+bool Profile::getPhoneNumber(const std::string& strInput, std::string& strPhoneNumber) {
+    const std::string strValue = trimSpaces(strInput);
     if (!Profile::isValidPhoneNumber(strValue)) {
         return false;
     }
@@ -105,8 +103,8 @@ bool Profile::getPhoneNumber(const string& strInput, string& strPhoneNumber) {
     return true;
 }
 
-bool Profile::getEmail(const string& strInput, string& strEmail) {
-    const string strValue = trimSpaces(strInput);
+bool Profile::getEmail(const std::string& strInput, std::string& strEmail) {
+    const std::string strValue = trimSpaces(strInput);
     if (!Profile::isValidEmail(strValue)) {
         return false;
     }
@@ -118,15 +116,15 @@ bool Profile::saveToFile() const {
     if (this->_strUsername.empty()) {
         return false;
     }
-    const string strFilePath = this->_strUsername + Profile::PROFILE_FILE_EXTENSION;
-    const string strTempPath = strFilePath + ".tmp";
-    const string strBackupPath = strFilePath + ".bak";
-    ifstream checkBackup(strBackupPath.c_str());
+    const std::string strFilePath = this->_strUsername + Profile::PROFILE_FILE_EXTENSION;
+    const std::string strTempPath = strFilePath + ".tmp";
+    const std::string strBackupPath = strFilePath + ".bak";
+    std::ifstream checkBackup(strBackupPath.c_str());
     if (checkBackup.good()) {
         return false;
     }
     checkBackup.close();
-    ofstream outTemp(strTempPath.c_str(), ios::trunc);
+    std::ofstream outTemp(strTempPath.c_str(), std::ios::trunc);
     if (!outTemp) {
         return false;
     }
@@ -136,170 +134,170 @@ bool Profile::saveToFile() const {
             << this->_strEmail << '\n';
     outTemp.close();
     if (!outTemp) {
-        remove(strTempPath.c_str());
+        std::remove(strTempPath.c_str());
         return false;
     }
     // Windows không cho rename đè lên file đã tồn tại nên phải chuyển file cũ sang .bak trước
-    if (rename(strFilePath.c_str(), strBackupPath.c_str()) != 0) {
-        remove(strTempPath.c_str());
+    if (std::rename(strFilePath.c_str(), strBackupPath.c_str()) != 0) {
+        std::remove(strTempPath.c_str());
         return false;
     }
-    if (rename(strTempPath.c_str(), strFilePath.c_str()) != 0) {
-        rename(strBackupPath.c_str(), strFilePath.c_str());
-        remove(strTempPath.c_str());
+    if (std::rename(strTempPath.c_str(), strFilePath.c_str()) != 0) {
+        std::rename(strBackupPath.c_str(), strFilePath.c_str());
+        std::remove(strTempPath.c_str());
         return false;
     }
-    remove(strBackupPath.c_str());
+    std::remove(strBackupPath.c_str());
     return true;
 }
 
-void Profile::searchByUsername(const string& strUsername) {
-    vector<string> vecUsernames;
+void Profile::searchByUsername(const std::string& strUsername) {
+    std::vector<std::string> vecUsernames;
     if (!Profile::loadUsernameList(vecUsernames)) {
-        cout << "Loi: Khong mo duoc file " << Profile::EMPLOYEES_FILE_NAME << "!" << endl;
+        std::cout << "Loi: Khong mo duoc file " << Profile::EMPLOYEES_FILE_NAME << "!" << std::endl;
         return;
     }
     if (!Profile::containsUsername(vecUsernames, strUsername)) {
-        cout << "Khong tim thay employee co username '" << strUsername << "'!" << endl;
+        std::cout << "Khong tim thay employee co username '" << strUsername << "'!" << std::endl;
         return;
     }
     Profile profile;
     if (!profile.loadFromFile(strUsername)) {
-        cout << "Loi: File thong tin cua '" << strUsername << "' khong ton tai hoac khong hop le!" << endl;
+        std::cout << "Loi: File thong tin cua '" << strUsername << "' khong ton tai hoac khong hop le!" << std::endl;
         return;
     }
     profile.display();
 }
 
 void Profile::displayAll() {
-    vector<string> vecUsernames;
+    std::vector<std::string> vecUsernames;
     if (!Profile::loadUsernameList(vecUsernames)) {
-        cout << "Loi: Khong mo duoc file " << Profile::EMPLOYEES_FILE_NAME << "!" << endl;
+        std::cout << "Loi: Khong mo duoc file " << Profile::EMPLOYEES_FILE_NAME << "!" << std::endl;
         return;
     }
     if (vecUsernames.empty()) {
-        cout << "Danh sach employee dang trong!" << endl;
+        std::cout << "Danh sach employee dang trong!" << std::endl;
         return;
     }
     Profile::displayList(vecUsernames);
 }
 
-void Profile::viewOwnProfile(const string& strUsername) {
+void Profile::viewOwnProfile(const std::string& strUsername) {
     Profile profile;
     if (!profile.loadFromFile(strUsername)) {
-        cout << "Loi: Khong doc duoc file thong tin tai khoan cua ban!" << endl;
+        std::cout << "Loi: Khong doc duoc file thong tin tai khoan cua ban!" << std::endl;
         return;
     }
     profile.display();
 }
 
-bool Profile::updateByUsername(const string& strUsername) {
-    vector<string> vecUsernames;
+bool Profile::updateByUsername(const std::string& strUsername) {
+    std::vector<std::string> vecUsernames;
     if (!Profile::loadUsernameList(vecUsernames)) {
-        cout << "Loi: Khong mo duoc file " << Profile::EMPLOYEES_FILE_NAME << "!" << endl;
+        std::cout << "Loi: Khong mo duoc file " << Profile::EMPLOYEES_FILE_NAME << "!" << std::endl;
         return false;
     }
     if (!Profile::containsUsername(vecUsernames, strUsername)) {
-        cout << "Khong tim thay employee co username '" << strUsername << "'!" << endl;
+        std::cout << "Khong tim thay employee co username '" << strUsername << "'!" << std::endl;
         return false;
     }
     Profile profile;
     if (!profile.loadFromFile(strUsername)) {
-        cout << "Loi: File thong tin cua '" << strUsername << "' khong ton tai hoac khong hop le!" << endl;
+        std::cout << "Loi: File thong tin cua '" << strUsername << "' khong ton tai hoac khong hop le!" << std::endl;
         return false;
     }
-    cout << "Thong tin hien tai:" << endl;
+    std::cout << "Thong tin hien tai:" << std::endl;
     profile.display();
     bool bChanged = false;
     while (true) {
-        cout << "1. Ho ten" << endl
-             << "2. Dia chi" << endl
-             << "3. So dien thoai" << endl
-             << "4. Email" << endl
-             << "5. Luu va thoat" << endl
-             << "0. Huy (khong luu)" << endl
+        std::cout << "1. Ho ten" << std::endl
+             << "2. Dia chi" << std::endl
+             << "3. So dien thoai" << std::endl
+             << "4. Email" << std::endl
+             << "5. Luu va thoat" << std::endl
+             << "0. Huy (khong luu)" << std::endl
              << "Chon thuoc tinh can cap nhat: ";
         int iChoice = -1;
-        if (!(cin >> iChoice)) {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Vui long nhap so tu 0 den 5." << endl;
+        if (!(std::cin >> iChoice)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Vui long nhap so tu 0 den 5." << std::endl;
             continue;
         }
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        string strInput = "";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::string strInput = "";
         switch (iChoice) {
             case 1:
-                cout << "Ho ten moi: ";
-                getline(cin, strInput);
+                std::cout << "Ho ten moi: ";
+                std::getline(std::cin, strInput);
                 if (profile.setFullName(strInput)) {
                     bChanged = true;
-                    cout << "Da doi ho ten." << endl;
+                    std::cout << "Da doi ho ten." << std::endl;
                 } else {
-                    cout << "Loi: Ho ten khong duoc de trong!" << endl;
+                    std::cout << "Loi: Ho ten khong duoc de trong!" << std::endl;
                 }
                 break;
             case 2:
-                cout << "Dia chi moi: ";
-                getline(cin, strInput);
+                std::cout << "Dia chi moi: ";
+                std::getline(std::cin, strInput);
                 if (profile.setAddress(strInput)) {
                     bChanged = true;
-                    cout << "Da doi dia chi." << endl;
+                    std::cout << "Da doi dia chi." << std::endl;
                 } else {
-                    cout << "Loi: Dia chi khong duoc de trong!" << endl;
+                    std::cout << "Loi: Dia chi khong duoc de trong!" << std::endl;
                 }
                 break;
             case 3:
-                cout << "So dien thoai moi: ";
-                getline(cin, strInput);
+                std::cout << "So dien thoai moi: ";
+                std::getline(std::cin, strInput);
                 if (profile.setPhoneNumber(strInput)) {
                     bChanged = true;
-                    cout << "Da doi so dien thoai." << endl;
+                    std::cout << "Da doi so dien thoai." << std::endl;
                 } else {
-                    cout << "Loi: So dien thoai chi gom chu so va co tu 10 den 11 chu so!" << endl;
+                    std::cout << "Loi: So dien thoai chi gom chu so va co tu 10 den 11 chu so!" << std::endl;
                 }
                 break;
             case 4:
-                cout << "Email moi: ";
-                getline(cin, strInput);
+                std::cout << "Email moi: ";
+                std::getline(std::cin, strInput);
                 if (profile.setEmail(strInput)) {
                     bChanged = true;
-                    cout << "Da doi email." << endl;
+                    std::cout << "Da doi email." << std::endl;
                 } else {
-                    cout << "Loi: Email khong hop le (vi du: ten@congty.com)!" << endl;
+                    std::cout << "Loi: Email khong hop le (vi du: ten@congty.com)!" << std::endl;
                 }
                 break;
             case 5:
                 if (!bChanged) {
-                    cout << "Khong co thay doi nao de luu." << endl;
+                    std::cout << "Khong co thay doi nao de luu." << std::endl;
                     return false;
                 }
                 if (!profile.saveToFile()) {
-                    cout << "Loi: Khong luu duoc file thong tin cua '" << strUsername << "'!" << endl;
+                    std::cout << "Loi: Khong luu duoc file thong tin cua '" << strUsername << "'!" << std::endl;
                     return false;
                 }
-                cout << "Cap nhat thong tin thanh cong!" << endl;
+                std::cout << "Cap nhat thong tin thanh cong!" << std::endl;
                 profile.display();
                 return true;
             case 0:
-                cout << "Da huy cap nhat." << endl;
+                std::cout << "Da huy cap nhat." << std::endl;
                 return false;
             default:
-                cout << "Vui long nhap so tu 0 den 5." << endl;
+                std::cout << "Vui long nhap so tu 0 den 5." << std::endl;
         }
     }
 }
 
-bool Profile::loadUsernameList(vector<string>& vecUsernames) {
-    ifstream fileEmployees;
+bool Profile::loadUsernameList(std::vector<std::string>& vecUsernames) {
+    std::ifstream fileEmployees;
     fileEmployees.open(Profile::EMPLOYEES_FILE_NAME.c_str());
     if (!fileEmployees.is_open()) {
         return false;
     }
-    string strLine = "";
-    while (getline(fileEmployees, strLine)) {
-        istringstream streamLine(strLine);
-        string strUsername = "";
+    std::string strLine = "";
+    while (std::getline(fileEmployees, strLine)) {
+        std::istringstream streamLine(strLine);
+        std::string strUsername = "";
         if (streamLine >> strUsername) {
             vecUsernames.push_back(strUsername);
         }
@@ -308,35 +306,35 @@ bool Profile::loadUsernameList(vector<string>& vecUsernames) {
     return true;
 }
 
-void Profile::displayByUsername(const string& strUsername) {
+void Profile::displayByUsername(const std::string& strUsername) {
     Profile profile;
     if (profile.loadFromFile(strUsername)) {
         profile.display();
     } else {
-        cout << "Canh bao: Khong doc duoc file thong tin cua '" << strUsername << "'!" << endl;
+        std::cout << "Canh bao: Khong doc duoc file thong tin cua '" << strUsername << "'!" << std::endl;
     }
 }
 
-bool Profile::isValidPhoneNumber(const string& strPhoneNumber) {
+bool Profile::isValidPhoneNumber(const std::string& strPhoneNumber) {
     if (strPhoneNumber.size() < 10 || strPhoneNumber.size() > 11) {
         return false;
     }
-    for (size_t i = 0; i < strPhoneNumber.size(); ++i) {
-        if (!isdigit(static_cast<unsigned char>(strPhoneNumber[i]))) {
+    for (std::size_t i = 0; i < strPhoneNumber.size(); ++i) {
+        if (!std::isdigit(static_cast<unsigned char>(strPhoneNumber[i]))) {
             return false;
         }
     }
     return true;
 }
 
-bool Profile::isValidEmail(const string& strEmail) {
-    const size_t iAt = strEmail.find('@');
-    if (iAt == string::npos || iAt == 0) {
+bool Profile::isValidEmail(const std::string& strEmail) {
+    const std::size_t iAt = strEmail.find('@');
+    if (iAt == std::string::npos || iAt == 0) {
         return false;
     }
-    if (strEmail.find('@', iAt + 1) != string::npos || strEmail.find(' ') != string::npos) {
+    if (strEmail.find('@', iAt + 1) != std::string::npos || strEmail.find(' ') != std::string::npos) {
         return false;
     }
-    const size_t iDot = strEmail.find_last_of('.');
-    return iDot != string::npos && iDot > iAt + 1 && iDot + 1 < strEmail.size();
+    const std::size_t iDot = strEmail.find_last_of('.');
+    return iDot != std::string::npos && iDot > iAt + 1 && iDot + 1 < strEmail.size();
 }
