@@ -1,8 +1,8 @@
 #ifndef PROFILE_H_INCLUDED_
 #define PROFILE_H_INCLUDED_
 
+#include "LinkedList.h"
 #include <string>
-#include <vector>
 
 class Profile {
 public:
@@ -155,7 +155,7 @@ private:
      * @return true nếu đọc thành công, false nếu không mở được file
      * @attention Mỗi dòng của file bắt đầu bằng username
      **********************************************************/
-    static bool loadUsernameList(std::vector<std::string>& vecUsernames);
+    static bool loadUsernameList(LinkedList<std::string>& usernames);
 
     /**********************************************************
      * @Description Đọc và hiển thị thông tin của một employee
