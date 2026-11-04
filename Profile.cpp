@@ -152,12 +152,12 @@ bool Profile::saveToFile() const {
 }
 
 void Profile::searchByUsername(const std::string& strUsername) {
-    std::vector<std::string> vecUsernames;
-    if (!Profile::loadUsernameList(vecUsernames)) {
+    LinkedList<std::string> usernames;
+    if (!Profile::loadUsernameList(usernames)) {
         std::cout << "Loi: Khong mo duoc file " << Profile::EMPLOYEES_FILE_NAME << "!" << std::endl;
         return;
     }
-    if (!Profile::containsUsername(vecUsernames, strUsername)) {
+    if (!Profile::containsUsername(usernames, strUsername)) {
         std::cout << "Khong tim thay employee co username '" << strUsername << "'!" << std::endl;
         return;
     }
@@ -170,16 +170,16 @@ void Profile::searchByUsername(const std::string& strUsername) {
 }
 
 void Profile::displayAll() {
-    std::vector<std::string> vecUsernames;
-    if (!Profile::loadUsernameList(vecUsernames)) {
+    LinkedList<std::string> usernames;
+    if (!Profile::loadUsernameList(usernames)) {
         std::cout << "Loi: Khong mo duoc file " << Profile::EMPLOYEES_FILE_NAME << "!" << std::endl;
         return;
     }
-    if (vecUsernames.empty()) {
+    if (usernames.empty()) {
         std::cout << "Danh sach employee dang trong!" << std::endl;
         return;
     }
-    Profile::displayList(vecUsernames);
+    Profile::displayList(usernames);
 }
 
 void Profile::viewOwnProfile(const std::string& strUsername) {
@@ -192,12 +192,12 @@ void Profile::viewOwnProfile(const std::string& strUsername) {
 }
 
 bool Profile::updateByUsername(const std::string& strUsername) {
-    std::vector<std::string> vecUsernames;
-    if (!Profile::loadUsernameList(vecUsernames)) {
+    LinkedList<std::string> usernames;
+    if (!Profile::loadUsernameList(usernames)) {
         std::cout << "Loi: Khong mo duoc file " << Profile::EMPLOYEES_FILE_NAME << "!" << std::endl;
         return false;
     }
-    if (!Profile::containsUsername(vecUsernames, strUsername)) {
+    if (!Profile::containsUsername(usernames, strUsername)) {
         std::cout << "Khong tim thay employee co username '" << strUsername << "'!" << std::endl;
         return false;
     }
@@ -288,7 +288,7 @@ bool Profile::updateByUsername(const std::string& strUsername) {
     }
 }
 
-bool Profile::loadUsernameList(std::vector<std::string>& vecUsernames) {
+bool Profile::loadUsernameList(LinkedList<std::string>& usernames) {
     std::ifstream fileEmployees;
     fileEmployees.open(Profile::EMPLOYEES_FILE_NAME.c_str());
     if (!fileEmployees.is_open()) {
@@ -299,7 +299,7 @@ bool Profile::loadUsernameList(std::vector<std::string>& vecUsernames) {
         std::istringstream streamLine(strLine);
         std::string strUsername = "";
         if (streamLine >> strUsername) {
-            vecUsernames.push_back(strUsername);
+            usernames.add(strUsername);
         }
     }
     fileEmployees.close();
