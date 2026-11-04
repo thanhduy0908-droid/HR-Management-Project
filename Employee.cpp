@@ -1,9 +1,10 @@
 #include "Employee.h"
+#include "LinkedList.h"
 
 #include <fstream>
 #include <iostream>
 #include <cstdio>
-#include <vector>
+#include <utility>
 
 /*************************************************************
  * @Description Khởi tạo đối tượng Employee với tên file dữ liệu nhân viên
@@ -71,7 +72,7 @@ bool Employee::needsFirstLoginPasswordChange(const std::string& strUsername) con
  * @Description Thay đổi mật khẩu cho nhân viên và lưu vào file
  *
  * @return      true nếu đổi mật khẩu thành công, false nếu sai mật khẩu hiện tại hoặc lỗi file
- * @attention   Sử dụng RecordList template để lưu trữ bộ nhớ tạm thời
+ * @attention   Sử dụng LinkedList template để lưu trữ bộ nhớ tạm thời
  * @attention   Sử dụng file tạm (.tmp) để ghi dữ liệu an toàn trước khi thay thế file chính
  *************************************************************/
 
@@ -90,11 +91,11 @@ bool Employee::changePassword(const std::string& strUsername,
         return false;
     }
 
-    RecordList<std::pair<std::string, std::string>> employeeList;
+    LinkedList<std::pair<std::string, std::string>> employeeList;
     std::string strUser, strPass;
     bool bFound = false;
 
-    // Đọc dữ liệu cũ vào RecordList và cập nhật mật khẩu mới cho đúng user
+    // Đọc dữ liệu cũ vào LinkedList và cập nhật mật khẩu mới cho đúng user
     while (inFile >> strUser >> strPass) {
         if (strUser == strUsername) {
             strPass = strNewPassword;
@@ -115,7 +116,7 @@ bool Employee::changePassword(const std::string& strUsername,
     }
 
     // Lặp qua danh sách để ghi ra file tạm
-    for (const auto& employee : employeeList.getItems()) {
+    for (const auto& employee : employeeList) {
         outFile << employee.first << ' ' << employee.second << '\n';
     }
     outFile.close();
