@@ -7,6 +7,7 @@
 #include <string>
 #include <limits>
 #include <streambuf>
+#include <vector>
 #include <cstdio>
 
 #ifdef _WIN32
