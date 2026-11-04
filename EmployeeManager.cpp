@@ -1,6 +1,7 @@
 #include "EmployeeManager.h"
-#include "Employee.h"
+#include "LinkedList.h"
 #include "Profile.h"
+#include <utility>
 #include <fstream>
 #include <iostream>
 #include <cstdio>
@@ -186,7 +187,7 @@ bool EmployeeManager::addEmployee (const std::string& strUsername, const std::st
  *
  * @return      true nếu xóa thành công, ngược lại trả về false
  * @attention   Tài khoản và file thông tin nhân viên phải tồn tại
- * @attention   Sử dụng RecordList, file tạm và file sao lưu
+ * @attention   Sử dụng LinkedList, file tạm và file sao lưu
  *              để cập nhật Employees.txt và xóa [username].txt
  *************************************************************/
 bool EmployeeManager::removeEmployee(const std::string& strUsername) const {
@@ -201,7 +202,7 @@ bool EmployeeManager::removeEmployee(const std::string& strUsername) const {
         return false;
     }
     /* Chỉ giữ lại những nhân viên có username khác người cần xóa. */
-    RecordList<std::pair<std::string, std::string>> remaining;
+    LinkedList<std::pair<std::string, std::string>> remaining;
     std::string strUser, strPass;
     bool bFound = false;
     while (inFile >> strUser >> strPass) {
@@ -244,7 +245,7 @@ bool EmployeeManager::removeEmployee(const std::string& strUsername) const {
         std::cout << "Khong tao duoc file tam.\n";
         return false;
     }
-    for (const auto& employee : remaining.getItems()) {
+    for (const auto& employee : remaining) {
         outFile << employee.first << ' ' << employee.second << '\n';
     }
     outFile.close();
