@@ -164,25 +164,16 @@ private:
      * @attention In cảnh báo nếu không đọc được file thông tin
      **********************************************************/
     static void displayByUsername(const std::string& strUsername);
-
     static bool isValidPhoneNumber(const std::string& strPhoneNumber);
-
     static bool isValidEmail(const std::string& strEmail);
-
     static const std::string EMPLOYEES_FILE_NAME;
-
     static const std::string PROFILE_FILE_EXTENSION;
-
     static const std::string SEPARATOR_LINE;
 
     std::string _strUsername;
-
     std::string _strFullName;
-
     std::string _strAddress;
-
     std::string _strPhoneNumber;
-
     std::string _strEmail;
 };
 
