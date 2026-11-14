@@ -80,7 +80,7 @@ private:
     bool isInputLine(const std::string& text) {
         static const std::vector<std::string> keywords = {
             "Username", "Password", "ho ten", "dia chi", "so dien thoai", "email",
-            "Ho ten", "Dia chi", "So dien thoai", "Email"
+            "Ho ten", "Dia chi", "So dien thoai", "Email", "Huy", "Luu"
         };
         for (const auto& keyword : keywords) {
             if (text.find(keyword) != std::string::npos) {
